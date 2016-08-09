@@ -8,7 +8,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/', function(req, res){
-  repo.insertUser(req.body, res);
+  repo.hasNameAndEmail(req.body, res);
 
   // res.render('join-result', {
   //   username: req.body.txtName,
