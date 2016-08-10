@@ -1,7 +1,10 @@
 var http = require('http')
   , fs = require('fs')
   , path = require('path')
-  , io = require("socket.io");
+  , io = require("socket.io")({
+      "transports": ["websocket", "flashsocket", "htmlfile", "xhr-polling", "jsonp-polling"]
+
+  });
 
 var server = http.createServer(function(req, res){
     var filename = path.join(process.cwd(), req.url);
@@ -32,29 +35,17 @@ var server = http.createServer(function(req, res){
 server.listen(3000);
 
 io = io.listen(server);
-// io.configure(function() {
-//   io.enable("browser client etag");
-//   io.set("log level", 3);
-//   io.set("transports", [
-//     "websocket"
-//     , "flashsocket"
-//     , "htmlfile"
-//     , "xhr-polling"
-//     , "jsonp-polling"
-//   ]);
-// });
-
 io.sockets.on("connection", function(socket){
-//   io.enable("browser client etag");
-//   io.set("log level", 3);
-//   io.set("transports", [
-//     "websocket"
-//     , "flashsocket"
-//     , "htmlfile"
-//     , "xhr-polling"
-//     , "jsonp-polling"
-//   ]);
   console.log("connected");
+
+  socket.on("disconnect", function(){
+    console.log("Good-bye");
+  });
+
+  socket.on("message", function(msg){
+    console.log(msg);
+    socket.send('서버 쪽 메세지 테스트');
+  });
 });
 
 console.log("서버가 시작됐습니다. http://localhost:3000");
